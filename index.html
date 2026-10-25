@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RoadRanger AI – Distance, Time & Route Planner</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="panel" id="panel">
+    <header class="top">
+      <h1>RoadRanger <span class="ai">AI</span></h1>
+      <div class="top-actions">
+        <button id="btnUnits" class="chip" title="Switch km / miles">km</button>
+        <button id="btnTheme" class="chip" title="Light / dark">◐</button>
+        <button id="btnPresent" class="chip" title="Presentation mode">Present</button>
+      </div>
+    </header>
+
+    <section class="block">
+      <div id="stops"></div>
+      <div class="row-actions">
+        <button id="addStop" class="ghost">+ Add stop</button>
+        <button id="swap" class="ghost">⇅ Reverse</button>
+        <button id="locate" class="ghost">◎ My location</button>
+        <button id="clear" class="ghost">Clear</button>
+      </div>
+      <p class="hint">Type to search places, click the map, or drag the pins. The route updates automatically.</p>
+    </section>
+
+    <section class="block grid2">
+      <label>Departure
+        <span class="inline"><input type="datetime-local" id="depart"><button id="now" class="ghost small">Now</button></span>
+      </label>
+      <label>Traffic
+        <select id="traffic">
+          <option value="light">Light</option>
+          <option value="normal" selected>Normal</option>
+          <option value="heavy">Heavy</option>
+        </select>
+      </label>
+      <label class="span2">What matters most?
+        <select id="priority">
+          <option value="balanced" selected>Balanced</option>
+          <option value="fast">Fastest arrival</option>
+          <option value="cheap">Lowest cost</option>
+          <option value="green">Lowest emissions</option>
+          <option value="health">Healthiest</option>
+        </select>
+      </label>
+    </section>
+
+    <div id="loading" class="loading" hidden>Finding the best roads…</div>
+
+    <div id="results" hidden>
+      <section class="block">
+        <div id="modes" class="modes"></div>
+        <div id="sign" class="sign"></div>
+        <div id="summary" class="summary"></div>
+        <div class="row-actions">
+          <button id="btnSim" class="primary">▶ Simulate trip</button>
+          <button id="btnShare" class="ghost">Copy link</button>
+          <button id="btnGpx" class="ghost">Export GPX</button>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2>AI route advisor</h2>
+        <div id="advisor"></div>
+      </section>
+
+      <section class="block">
+        <h2>Compare every way to travel</h2>
+        <div id="compare"></div>
+      </section>
+
+      <section class="block">
+        <h2>Weather at destination</h2>
+        <div id="weather" class="weather">Loading…</div>
+      </section>
+
+      <section class="block">
+        <h2>Find places nearby</h2>
+        <div class="row-actions">
+          <select id="nearbyNear">
+            <option value="end">Near destination</option>
+            <option value="start">Near start</option>
+            <option value="center">Near map centre</option>
+          </select>
+        </div>
+        <div id="nearbyChips" class="chips"></div>
+        <p id="nearbyInfo" class="hint"></p>
+      </section>
+
+      <section class="block">
+        <details>
+          <summary>Turn-by-turn directions</summary>
+          <ol id="steps" class="steps"></ol>
+        </details>
+      </section>
+    </div>
+
+    <section class="block">
+      <details id="aiBox">
+        <summary>Ask Claude about this trip (optional)</summary>
+        <p class="hint">Paste your own Anthropic API key. It stays in this browser and is only sent to api.anthropic.com.</p>
+        <input id="apiKey" type="password" placeholder="sk-ant-…" autocomplete="off">
+        <label class="check"><input type="checkbox" id="rememberKey"> Remember key in this browser</label>
+        <textarea id="aiQ" rows="2">Which option should I choose for this trip, and what should I watch out for?</textarea>
+        <button id="aiGo" class="primary">Ask</button>
+        <div id="aiOut" class="ai-out"></div>
+      </details>
+    </section>
+
+    <section class="block history-block">
+      <h2>Recent routes</h2>
+      <ul id="history" class="history"></ul>
+    </section>
+
+    <footer class="foot">
+      Map data © OpenStreetMap contributors · Routing by OSRM (routing.openstreetmap.de) · Weather by Open-Meteo
+    </footer>
+  </aside>
+
+  <main id="map" aria-label="Map"></main>
+</div>
+<div id="toast" class="toast" role="status"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

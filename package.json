@@ -1,0 +1,9 @@
+{
+  "name": "road-ranger-ai",
+  "version": "1.0.0",
+  "description": "Real-map distance, travel time and AI route advisor",
+  "scripts": {
+    "start": "npx http-server . -p 5500 -c-1 -o"
+  },
+  "license": "MIT"
+}
